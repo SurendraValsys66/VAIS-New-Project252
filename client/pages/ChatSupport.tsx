@@ -8,6 +8,14 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   ArrowLeft,
   Send,
   Paperclip,
@@ -143,10 +151,24 @@ export default function ChatSupport() {
   const [messages, setMessages] = useState<ChatMessage[]>(sampleChatMessages);
   const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [ticketStatus, setTicketStatus] = useState<"open" | "in-progress" | "resolved" | "closed">("open");
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Find the ticket based on ID
-  const ticket = sampleTickets.find((t) => t.id === ticketId);
+  let ticket = sampleTickets.find((t) => t.id === ticketId);
+
+  // Initialize ticketStatus with the ticket's current status
+  useEffect(() => {
+    if (ticket) {
+      setTicketStatus(ticket.status);
+    }
+  }, [ticketId]);
+
+  // Apply the local state status to the ticket
+  if (ticket) {
+    ticket = { ...ticket, status: ticketStatus };
+  }
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -258,6 +280,23 @@ export default function ChatSupport() {
     }).format(date);
   };
 
+  const handleCloseTicket = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmClose = () => {
+    setTicketStatus("closed");
+    // Add system message to chat
+    const systemMessage: ChatMessage = {
+      id: (Date.now() + 2).toString(),
+      sender: "system",
+      message: "Ticket has been marked as resolved and closed.",
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, systemMessage]);
+    setShowConfirmDialog(false);
+  };
+
   return (
     <DashboardLayout>
       <div className="w-full space-y-6">
@@ -282,6 +321,15 @@ export default function ChatSupport() {
               </p>
             </div>
           </div>
+          {ticketStatus !== "closed" && (
+            <Button
+              onClick={handleCloseTicket}
+              className="font-semibold transition-all duration-200 bg-green-600 hover:bg-green-700 text-white"
+            >
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Close Ticket
+            </Button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -594,6 +642,33 @@ export default function ChatSupport() {
           </div>
         </div>
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Close Ticket</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to close this ticket? Once closed, it will be marked as resolved.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setShowConfirmDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmClose}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }

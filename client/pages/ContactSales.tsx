@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ interface FormData {
   phoneNumber: string;
   companyName: string;
   attendeeCount: string;
+  subject: string;
   message: string;
 }
 
@@ -44,13 +46,17 @@ const faqs = [
 ];
 
 export default function ContactSales() {
+  const location = useLocation();
+  const isFromProfile = (location.state as any)?.source === "profile";
+
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     workEmail: "",
     phoneNumber: "",
     companyName: "",
-    attendeeCount: "",
+    attendeeCount: isFromProfile ? "" : "",
+    subject: "",
     message: "",
   });
 
@@ -74,14 +80,18 @@ export default function ContactSales() {
   };
 
   const isFormValid = () => {
-    return (
+    const baseValidation =
       formData.firstName.trim() !== "" &&
       formData.lastName.trim() !== "" &&
       formData.workEmail.trim() !== "" &&
       formData.phoneNumber.trim() !== "" &&
-      formData.companyName.trim() !== "" &&
-      formData.attendeeCount !== ""
-    );
+      formData.companyName.trim() !== "";
+
+    if (isFromProfile) {
+      return baseValidation && formData.subject.trim() !== "";
+    }
+
+    return baseValidation && formData.attendeeCount !== "";
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -150,10 +160,10 @@ export default function ContactSales() {
                 <>
                   <div className="mb-8">
                     <h3 className="text-2xl font-bold text-valasys-gray-900 mb-1">
-                      Talk with our sales team
+                      {isFromProfile ? "Talk with our support team" : "Talk with our sales team"}
                     </h3>
                     <p className="text-sm text-valasys-gray-600">
-                      Let's schedule a chat.
+                      {isFromProfile ? "We're here to help." : "Let's schedule a chat."}
                     </p>
                   </div>
 
@@ -233,32 +243,48 @@ export default function ContactSales() {
                       />
                     </div>
 
-                    {/* Attendee Count */}
-                    <div>
-                      <label className="block text-xs font-semibold text-valasys-gray-700 mb-2">
-                        How many people will attend our chat?{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <Select
-                        value={formData.attendeeCount}
-                        onValueChange={handleSelectChange}
-                      >
-                        <SelectTrigger className="h-10">
-                          <SelectValue placeholder="Please provide the required info" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">1 person</SelectItem>
-                          <SelectItem value="2-3">2-3 people</SelectItem>
-                          <SelectItem value="4-5">4-5 people</SelectItem>
-                          <SelectItem value="6+">6+ people</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    {/* Attendee Count (Sales) or Subject (Support) */}
+                    {isFromProfile ? (
+                      <div>
+                        <label className="block text-xs font-semibold text-valasys-gray-700 mb-2">
+                          Subject <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                          type="text"
+                          name="subject"
+                          value={formData.subject}
+                          onChange={handleChange}
+                          placeholder="What do you need help with?"
+                          className="h-10"
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="block text-xs font-semibold text-valasys-gray-700 mb-2">
+                          How many people will attend our chat?{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        <Select
+                          value={formData.attendeeCount}
+                          onValueChange={handleSelectChange}
+                        >
+                          <SelectTrigger className="h-10">
+                            <SelectValue placeholder="Please provide the required info" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 person</SelectItem>
+                            <SelectItem value="2-3">2-3 people</SelectItem>
+                            <SelectItem value="4-5">4-5 people</SelectItem>
+                            <SelectItem value="6+">6+ people</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
 
                     {/* Message */}
                     <div>
                       <label className="block text-xs font-semibold text-valasys-gray-700 mb-2">
-                        How can our team help you?
+                        {isFromProfile ? "Describe your issue" : "How can our team help you?"}
                       </label>
                       <Textarea
                         name="message"
@@ -277,7 +303,7 @@ export default function ContactSales() {
                         disabled={!isFormValid()}
                         className="px-12 h-11 bg-gradient-to-r from-valasys-orange to-valasys-orange-light hover:from-valasys-orange/90 hover:to-valasys-orange-light/90 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Let's talk
+                        {isFromProfile ? "Send" : "Let's talk"}
                       </Button>
                     </div>
                   </form>

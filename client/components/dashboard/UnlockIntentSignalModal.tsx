@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Info } from "lucide-react";
@@ -46,6 +46,9 @@ export default function UnlockIntentSignalModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-4xl p-0 border-0 rounded-2xl overflow-hidden bg-white">
+        <DialogTitle className="sr-only">
+          Unlock Intent Signal
+        </DialogTitle>
         {/* Close Button */}
         <button
           onClick={() => {

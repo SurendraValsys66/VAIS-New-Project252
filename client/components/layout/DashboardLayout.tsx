@@ -37,6 +37,7 @@ import {
   Heart,
   Mail,
   Layers,
+  MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -1179,6 +1180,29 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                               <div className="font-medium">Notifications</div>
                               <div className="text-xs text-gray-500">
                                 Manage alerts & updates
+                              </div>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                      </div>
+
+                      <DropdownMenuSeparator />
+
+                      <div className="p-1">
+                        <DropdownMenuItem
+                          asChild
+                          className="cursor-pointer items-start gap-3 py-3"
+                        >
+                          <Link
+                            to="/contact-sales"
+                            state={{ source: "profile" }}
+                            className="flex items-start gap-3 w-full"
+                          >
+                            <MessageCircle className="mt-0.5 h-4 w-4 text-valasys-orange" />
+                            <div>
+                              <div className="font-medium">Get support</div>
+                              <div className="text-xs text-gray-500">
+                                Contact our support team
                               </div>
                             </div>
                           </Link>

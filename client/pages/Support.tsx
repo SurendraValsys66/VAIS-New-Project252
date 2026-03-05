@@ -75,6 +75,7 @@ interface SupportTicket {
   updatedAt: Date;
   assignedTo?: string;
   attachments?: { name: string; size: number; type: string }[];
+  chatCount?: number;
 }
 
 // Sample support tickets
@@ -89,6 +90,7 @@ const sampleTickets: SupportTicket[] = [
     category: "Export Issues",
     createdAt: new Date("2024-01-15T10:30:00Z"),
     updatedAt: new Date("2024-01-15T10:30:00Z"),
+    chatCount: 5,
   },
   {
     id: "TICK-002",
@@ -101,6 +103,7 @@ const sampleTickets: SupportTicket[] = [
     createdAt: new Date("2024-01-12T14:20:00Z"),
     updatedAt: new Date("2024-01-14T09:15:00Z"),
     assignedTo: "Sarah Mitchell",
+    chatCount: 8,
   },
   {
     id: "TICK-003",
@@ -113,6 +116,7 @@ const sampleTickets: SupportTicket[] = [
     createdAt: new Date("2024-01-10T16:45:00Z"),
     updatedAt: new Date("2024-01-13T11:30:00Z"),
     assignedTo: "Technical Team",
+    chatCount: 12,
   },
   {
     id: "TICK-004",
@@ -124,6 +128,7 @@ const sampleTickets: SupportTicket[] = [
     category: "Notifications",
     createdAt: new Date("2024-01-08T08:00:00Z"),
     updatedAt: new Date("2024-01-16T09:00:00Z"),
+    chatCount: 3,
   },
 ];
 
@@ -316,6 +321,7 @@ export default function Support() {
       status: "open",
       createdAt: new Date(),
       updatedAt: new Date(),
+      chatCount: 0,
       attachments: ticketFiles.map((f) => ({
         name: f.name,
         size: f.size,
@@ -756,7 +762,7 @@ export default function Support() {
                       <TableHead>Category</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead>Last Updated</TableHead>
-                      <TableHead>Action</TableHead>
+                      <TableHead>Chat Messages</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -814,16 +820,31 @@ export default function Support() {
                           {formatDate(ticket.updatedAt)}
                         </TableCell>
                         <TableCell>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              navigate(`/chat-support/${ticket.id}`)
-                            }
-                            className="border-valasys-orange text-valasys-orange hover:bg-valasys-orange hover:text-white"
-                          >
-                            <MessageCircle className="w-4 h-4" />
-                          </Button>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              onClick={() =>
+                                navigate(`/chat-support/${ticket.id}`)
+                              }
+                              variant="ghost"
+                              size="sm"
+                              className="relative h-10 w-10 rounded-full bg-valasys-orange/10 hover:bg-valasys-orange/20 text-valasys-orange transition-colors duration-200"
+                            >
+                              <MessageCircle className="w-5 h-5" />
+                              {ticket.chatCount && ticket.chatCount > 0 && (
+                                <span className="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 bg-valasys-orange text-white text-xs font-bold rounded-full border-2 border-white">
+                                  {ticket.chatCount > 99 ? "99+" : ticket.chatCount}
+                                </span>
+                              )}
+                            </Button>
+                            <div className="flex flex-col">
+                              <span className="text-xs font-semibold text-gray-900">
+                                {ticket.chatCount || 0}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                message{ticket.chatCount !== 1 ? "s" : ""}
+                              </span>
+                            </div>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}

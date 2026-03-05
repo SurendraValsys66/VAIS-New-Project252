@@ -578,6 +578,7 @@ export default function ProspectResults() {
   const [selectedProspect, setSelectedProspect] = useState<ProspectData | null>(
     null,
   );
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     jobFunction: "",
     jobLevel: "",
@@ -1602,6 +1603,8 @@ export default function ProspectResults() {
                               selectedItems.includes(prospect.id) &&
                                 "bg-blue-50",
                             )}
+                            onMouseEnter={() => setHoveredRowId(prospect.id)}
+                            onMouseLeave={() => setHoveredRowId(null)}
                           >
                             <TableCell className="pl-6">
                               <Checkbox
@@ -1619,38 +1622,6 @@ export default function ProspectResults() {
                             {columnVisibility.prospect && (
                               <TableCell>
                                 <div className="flex items-center space-x-3">
-                                  <Avatar className="h-10 w-10">
-                                    <AvatarImage
-                                      src={prospect.profileImageUrl}
-                                      alt={prospect.fullName}
-                                    />
-                                    <AvatarFallback className="bg-valasys-orange text-white">
-                                      {prospect.firstName[0]}
-                                      {prospect.lastName[0]}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  <div className="flex-1">
-                                    <div className="font-medium text-gray-900">
-                                      {prospect.fullName}
-                                    </div>
-                                    <div className="text-sm text-gray-600">
-                                      {prospect.jobTitle}
-                                    </div>
-                                    <div className="flex items-center space-x-2 mt-1">
-                                      <Badge
-                                        variant="outline"
-                                        className="text-xs px-1 py-0"
-                                      >
-                                        {prospect.jobLevel}
-                                      </Badge>
-                                      <Badge
-                                        variant="outline"
-                                        className="text-xs px-1 py-0"
-                                      >
-                                        {prospect.jobFunction}
-                                      </Badge>
-                                    </div>
-                                  </div>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <Button
@@ -1689,6 +1660,286 @@ export default function ProspectResults() {
                                         : "Add to favorites"}
                                     </TooltipContent>
                                   </Tooltip>
+                                  <Avatar className="h-10 w-10">
+                                    <AvatarImage
+                                      src={prospect.profileImageUrl}
+                                      alt={prospect.fullName}
+                                    />
+                                    <AvatarFallback className="bg-valasys-orange text-white">
+                                      {prospect.firstName[0]}
+                                      {prospect.lastName[0]}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1">
+                                    <div className="font-medium text-gray-900">
+                                      {prospect.fullName}
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                      {prospect.jobTitle}
+                                    </div>
+                                    <div className="flex items-center space-x-2 mt-1">
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs px-1 py-0"
+                                      >
+                                        {prospect.jobLevel}
+                                      </Badge>
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs px-1 py-0"
+                                      >
+                                        {prospect.jobFunction}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                  <Sheet>
+                                      <SheetTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className={cn(
+                                            "h-8 w-8 p-0 hover:bg-gray-200 flex-shrink-0",
+                                            hoveredRowId === prospect.id
+                                              ? "visible"
+                                              : "invisible"
+                                          )}
+                                          aria-label="View prospect details"
+                                          onClick={() =>
+                                            setSelectedProspect(prospect)
+                                          }
+                                        >
+                                          <ExternalLink className="w-4 h-4 text-gray-600" />
+                                        </Button>
+                                      </SheetTrigger>
+                                      <SheetContent
+                                        side="right"
+                                        className="sm:max-w-md md:max-w-lg lg:max-w-2xl w-[90vw] h-screen overflow-y-auto p-0"
+                                      >
+                                        <div className="sticky top-0 bg-white border-b p-4 z-10">
+                                          <div className="flex items-center justify-between mb-4">
+                                            <h2 className="text-lg font-semibold">Quick View</h2>
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              className="h-6 w-6 p-0"
+                                            >
+                                              <ExternalLink className="w-4 h-4" />
+                                            </Button>
+                                          </div>
+
+                                          {/* Prospect Header */}
+                                          <div className="flex gap-3">
+                                            <Avatar className="h-12 w-12">
+                                              <AvatarImage
+                                                src={prospect.profileImageUrl}
+                                                alt={prospect.fullName}
+                                              />
+                                              <AvatarFallback className="bg-valasys-orange text-white">
+                                                {prospect.firstName[0]}
+                                                {prospect.lastName[0]}
+                                              </AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex-1">
+                                              <h3 className="font-semibold text-gray-900">
+                                                {prospect.fullName}
+                                              </h3>
+                                              <p className="text-sm text-gray-600">
+                                                {prospect.jobTitle}
+                                              </p>
+                                              <p className="text-xs text-gray-500">
+                                                {prospect.companyName}
+                                              </p>
+                                            </div>
+                                          </div>
+
+                                          {/* Action Buttons */}
+                                          <div className="flex gap-2 mt-4">
+                                            <Button className="flex-1 bg-valasys-orange hover:bg-valasys-orange/90 text-white text-xs h-8">
+                                              <Download className="w-3 h-3 mr-1" />
+                                              Export
+                                            </Button>
+                                            <Button
+                                              variant="outline"
+                                              className="flex-1 text-xs h-8"
+                                            >
+                                              Tag
+                                            </Button>
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              className="h-8 w-8 p-0"
+                                            >
+                                              <MoreVertical className="w-4 h-4" />
+                                            </Button>
+                                          </div>
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="p-4 space-y-4">
+                                          {/* Main Contact Details */}
+                                          <div>
+                                            <h4 className="text-xs font-semibold text-gray-700 uppercase mb-3">
+                                              Main Contact Details
+                                            </h4>
+                                            <div className="space-y-2">
+                                              <div className="flex items-center gap-2 text-sm">
+                                                <Mail className="w-4 h-4 text-gray-400" />
+                                                <a
+                                                  href={`mailto:${prospect.email}`}
+                                                  className="text-blue-600 hover:underline"
+                                                >
+                                                  {maskEmail(prospect.email)}
+                                                </a>
+                                              </div>
+                                              {prospect.phone && (
+                                                <div className="flex items-center gap-2 text-sm">
+                                                  <Phone className="w-4 h-4 text-gray-400" />
+                                                  <span>{prospect.phone}</span>
+                                                </div>
+                                              )}
+                                              {prospect.linkedinUrl && (
+                                                <div className="flex items-center gap-2 text-sm">
+                                                  <Linkedin className="w-4 h-4 text-blue-600" />
+                                                  <a
+                                                    href={prospect.linkedinUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:underline"
+                                                  >
+                                                    LinkedIn Profile
+                                                  </a>
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+
+                                          {/* Additional Contact Details */}
+                                          <div>
+                                            <h4 className="text-xs font-semibold text-gray-700 uppercase mb-3">
+                                              Additional Contact Details
+                                            </h4>
+                                            <div className="space-y-1 text-sm text-gray-600">
+                                              {prospect.phone && (
+                                                <p>
+                                                  <span className="font-medium">Phone:</span>{" "}
+                                                  {prospect.phone}
+                                                </p>
+                                              )}
+                                              {prospect.jobLevel && (
+                                                <p>
+                                                  <span className="font-medium">Level:</span>{" "}
+                                                  {prospect.jobLevel}
+                                                </p>
+                                              )}
+                                            </div>
+                                          </div>
+
+                                          {/* Location */}
+                                          <div>
+                                            <h4 className="text-xs font-semibold text-gray-700 uppercase mb-3">
+                                              Location
+                                            </h4>
+                                            <div className="flex gap-2 text-sm text-gray-600">
+                                              <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                                              <div>
+                                                <p>
+                                                  {prospect.city}, {prospect.country}
+                                                </p>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          {/* Company Details */}
+                                          <div>
+                                            <h4 className="text-xs font-semibold text-gray-700 uppercase mb-3 flex items-center gap-1">
+                                              Company Details
+                                              <ExternalLink className="w-3 h-3" />
+                                            </h4>
+                                            <div className="space-y-3">
+                                              <div>
+                                                <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                                  Company
+                                                </p>
+                                                <p className="text-sm font-medium text-gray-900">
+                                                  {prospect.companyName}
+                                                </p>
+                                              </div>
+
+                                              <div>
+                                                <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                                  Industry
+                                                </p>
+                                                <p className="text-sm text-gray-700">
+                                                  {prospect.industry}
+                                                </p>
+                                              </div>
+
+                                              <div>
+                                                <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                                  Company Size
+                                                </p>
+                                                <p className="text-sm text-gray-700">
+                                                  {prospect.companySize}
+                                                </p>
+                                              </div>
+
+                                              <div>
+                                                <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                                  Revenue
+                                                </p>
+                                                <p className="text-sm text-gray-700">
+                                                  {prospect.revenue}
+                                                </p>
+                                              </div>
+
+                                              {prospect.yearsAtCompany && (
+                                                <div>
+                                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                                    Years at Company
+                                                  </p>
+                                                  <p className="text-sm text-gray-700">
+                                                    {prospect.yearsAtCompany} years
+                                                  </p>
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+
+                                          {/* Engagement */}
+                                          <div>
+                                            <h4 className="text-xs font-semibold text-gray-700 uppercase mb-3">
+                                              Engagement
+                                            </h4>
+                                            <div className="space-y-2">
+                                              <div className="flex items-center justify-between">
+                                                <span className="text-sm text-gray-600">
+                                                  Intent Signal
+                                                </span>
+                                                <Badge
+                                                  variant="secondary"
+                                                  className={cn(
+                                                    "border",
+                                                    getIntentSignalColor(
+                                                      prospect.intentSignal,
+                                                    ),
+                                                  )}
+                                                >
+                                                  {prospect.intentSignal}
+                                                </Badge>
+                                              </div>
+                                              <div className="flex items-center justify-between">
+                                                <span className="text-sm text-gray-600">
+                                                  Engagement Score
+                                                </span>
+                                                <span className="text-sm font-semibold text-gray-900">
+                                                  {prospect.engagementScore}
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </SheetContent>
+                                    </Sheet>
                                 </div>
                               </TableCell>
                             )}
