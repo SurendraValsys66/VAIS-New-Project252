@@ -1326,8 +1326,8 @@ export default function CampaignOverview() {
             </DialogHeader>
 
             <div className="py-4">
-              {/* Lead Cards Grid */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* Lead Cards List */}
+              <div className="flex flex-col gap-4 mb-6">
                 {/* CS Card */}
                 <div
                   className={cn(
@@ -1344,6 +1344,7 @@ export default function CampaignOverview() {
                         checked={selectedLeads.cs}
                         onCheckedChange={() => toggleLeadSelection("cs")}
                         onClick={(e) => e.stopPropagation()}
+                        className="rounded-none"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900 text-sm">
@@ -1387,6 +1388,7 @@ export default function CampaignOverview() {
                         checked={selectedLeads.mql}
                         onCheckedChange={() => toggleLeadSelection("mql")}
                         onClick={(e) => e.stopPropagation()}
+                        className="rounded-none"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900 text-sm">
@@ -1430,6 +1432,7 @@ export default function CampaignOverview() {
                         checked={selectedLeads.hql}
                         onCheckedChange={() => toggleLeadSelection("hql")}
                         onClick={(e) => e.stopPropagation()}
+                        className="rounded-none"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900 text-sm">
@@ -1473,6 +1476,7 @@ export default function CampaignOverview() {
                         checked={selectedLeads.bantVpi}
                         onCheckedChange={() => toggleLeadSelection("bantVpi")}
                         onClick={(e) => e.stopPropagation()}
+                        className="rounded-none"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900 text-sm">
@@ -1503,7 +1507,7 @@ export default function CampaignOverview() {
                 {/* Webinar Card */}
                 <div
                   className={cn(
-                    "p-4 rounded-lg border-2 cursor-pointer transition-all col-span-2 sm:col-span-1",
+                    "p-4 rounded-lg border-2 cursor-pointer transition-all",
                     selectedLeads.webinar
                       ? "border-pink-500 bg-pink-50"
                       : "border-gray-200 bg-white hover:border-gray-300"
@@ -1516,6 +1520,7 @@ export default function CampaignOverview() {
                         checked={selectedLeads.webinar}
                         onCheckedChange={() => toggleLeadSelection("webinar")}
                         onClick={(e) => e.stopPropagation()}
+                        className="rounded-none"
                       />
                       <div>
                         <h3 className="font-semibold text-gray-900 text-sm">
