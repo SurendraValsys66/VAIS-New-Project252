@@ -1338,21 +1338,23 @@ export default function CampaignOverview() {
                   )}
                   onClick={() => toggleLeadSelection("cs")}
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 text-sm">
-                        Contact Strings
-                      </h3>
-                      <p className="text-xs text-gray-600 mt-0.5">CS</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Checkbox
+                        checked={selectedLeads.cs}
+                        onCheckedChange={() => toggleLeadSelection("cs")}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <div>
+                        <h3 className="font-semibold text-gray-900 text-sm">
+                          CS
+                        </h3>
+                        <p className="text-xs text-gray-600 mt-0.5">Contact Strings</p>
+                      </div>
                     </div>
-                    <Checkbox
-                      checked={selectedLeads.cs}
-                      onCheckedChange={() => toggleLeadSelection("cs")}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  <div className="text-2xl font-bold text-blue-600">
-                    {campaignCounts.cs}
+                    <div className="text-2xl font-bold text-blue-600">
+                      {campaignCounts.cs}
+                    </div>
                   </div>
                   {selectedLeads.cs && (
                     <div className="mt-3">
@@ -1379,21 +1381,23 @@ export default function CampaignOverview() {
                   )}
                   onClick={() => toggleLeadSelection("mql")}
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 text-sm">
-                        Marketing Qualified
-                      </h3>
-                      <p className="text-xs text-gray-600 mt-0.5">MQL</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Checkbox
+                        checked={selectedLeads.mql}
+                        onCheckedChange={() => toggleLeadSelection("mql")}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <div>
+                        <h3 className="font-semibold text-gray-900 text-sm">
+                          MQL
+                        </h3>
+                        <p className="text-xs text-gray-600 mt-0.5">Marketing Qualified</p>
+                      </div>
                     </div>
-                    <Checkbox
-                      checked={selectedLeads.mql}
-                      onCheckedChange={() => toggleLeadSelection("mql")}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  <div className="text-2xl font-bold text-green-600">
-                    {campaignCounts.mql}
+                    <div className="text-2xl font-bold text-green-600">
+                      {campaignCounts.mql}
+                    </div>
                   </div>
                   {selectedLeads.mql && (
                     <div className="mt-3">
@@ -1420,21 +1424,23 @@ export default function CampaignOverview() {
                   )}
                   onClick={() => toggleLeadSelection("hql")}
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 text-sm">
-                        Highly Qualified
-                      </h3>
-                      <p className="text-xs text-gray-600 mt-0.5">HQL</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Checkbox
+                        checked={selectedLeads.hql}
+                        onCheckedChange={() => toggleLeadSelection("hql")}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <div>
+                        <h3 className="font-semibold text-gray-900 text-sm">
+                          HQL
+                        </h3>
+                        <p className="text-xs text-gray-600 mt-0.5">Highly Qualified</p>
+                      </div>
                     </div>
-                    <Checkbox
-                      checked={selectedLeads.hql}
-                      onCheckedChange={() => toggleLeadSelection("hql")}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  <div className="text-2xl font-bold text-purple-600">
-                    {campaignCounts.hql}
+                    <div className="text-2xl font-bold text-purple-600">
+                      {campaignCounts.hql}
+                    </div>
                   </div>
                   {selectedLeads.hql && (
                     <div className="mt-3">
@@ -1461,21 +1467,23 @@ export default function CampaignOverview() {
                   )}
                   onClick={() => toggleLeadSelection("bantVpi")}
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 text-sm">
-                        BANT + VPI
-                      </h3>
-                      <p className="text-xs text-gray-600 mt-0.5">High Intent</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Checkbox
+                        checked={selectedLeads.bantVpi}
+                        onCheckedChange={() => toggleLeadSelection("bantVpi")}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <div>
+                        <h3 className="font-semibold text-gray-900 text-sm">
+                          BANT+VPI
+                        </h3>
+                        <p className="text-xs text-gray-600 mt-0.5">High Intent</p>
+                      </div>
                     </div>
-                    <Checkbox
-                      checked={selectedLeads.bantVpi}
-                      onCheckedChange={() => toggleLeadSelection("bantVpi")}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  <div className="text-2xl font-bold text-amber-600">
-                    {campaignCounts.bantVpi}
+                    <div className="text-2xl font-bold text-amber-600">
+                      {campaignCounts.bantVpi}
+                    </div>
                   </div>
                   {selectedLeads.bantVpi && (
                     <div className="mt-3">
@@ -1502,21 +1510,23 @@ export default function CampaignOverview() {
                   )}
                   onClick={() => toggleLeadSelection("webinar")}
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 text-sm">
-                        Webinar Attendees
-                      </h3>
-                      <p className="text-xs text-gray-600 mt-0.5">Events</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Checkbox
+                        checked={selectedLeads.webinar}
+                        onCheckedChange={() => toggleLeadSelection("webinar")}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <div>
+                        <h3 className="font-semibold text-gray-900 text-sm">
+                          Webinar
+                        </h3>
+                        <p className="text-xs text-gray-600 mt-0.5">Attendees</p>
+                      </div>
                     </div>
-                    <Checkbox
-                      checked={selectedLeads.webinar}
-                      onCheckedChange={() => toggleLeadSelection("webinar")}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  <div className="text-2xl font-bold text-pink-600">
-                    {campaignCounts.webinar}
+                    <div className="text-2xl font-bold text-pink-600">
+                      {campaignCounts.webinar}
+                    </div>
                   </div>
                   {selectedLeads.webinar && (
                     <div className="mt-3">
