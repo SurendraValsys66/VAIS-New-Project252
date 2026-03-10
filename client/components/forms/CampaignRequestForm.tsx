@@ -1190,6 +1190,43 @@ export default function CampaignRequestForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
+        {/* Form Heading with Toggle */}
+        <div className="mb-8 pb-6 border-b border-gray-200">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                Campaign Request Form
+              </h2>
+              <p className="text-sm text-gray-600">
+                Fill out the details below to create a new campaign request
+              </p>
+            </div>
+            <ToggleGroup
+              type="single"
+              value={campaignMode}
+              onValueChange={(value) => {
+                if (value) setCampaignMode(value as "live" | "tal");
+              }}
+              className="bg-white border border-gray-300 rounded-full p-1"
+            >
+              <ToggleGroupItem
+                value="live"
+                aria-label="Live mode"
+                className="text-sm font-medium px-4 py-2 rounded-full data-[state=on]:bg-blue-500 data-[state=on]:text-white data-[state=off]:text-gray-700"
+              >
+                Live
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="tal"
+                aria-label="TAL File mode"
+                className="text-sm font-medium px-4 py-2 rounded-full data-[state=on]:bg-purple-500 data-[state=on]:text-white data-[state=off]:text-gray-700"
+              >
+                TAL File
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* LEFT COLUMN */}
           <div className="space-y-6">
@@ -1411,38 +1448,13 @@ export default function CampaignRequestForm() {
 
             {/* Section 4: Submit Campaign */}
             <div className="bg-gradient-to-b from-orange-50 to-orange-100 border-2 border-orange-300 rounded-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-500 text-white text-sm font-semibold">
-                    {campaignMode === "tal" ? 4 : 3}
-                  </span>
-                  <h3 className="text-sm font-semibold text-gray-900">
-                    Campaign Request
-                  </h3>
-                </div>
-                <ToggleGroup
-                  type="single"
-                  value={campaignMode}
-                  onValueChange={(value) => {
-                    if (value) setCampaignMode(value as "live" | "tal");
-                  }}
-                  className="bg-white border border-gray-300 rounded-full p-1"
-                >
-                  <ToggleGroupItem
-                    value="live"
-                    aria-label="Live mode"
-                    className="text-sm font-medium px-4 py-2 rounded-full data-[state=on]:bg-blue-500 data-[state=on]:text-white data-[state=off]:text-gray-700"
-                  >
-                    Live
-                  </ToggleGroupItem>
-                  <ToggleGroupItem
-                    value="tal"
-                    aria-label="TAL File mode"
-                    className="text-sm font-medium px-4 py-2 rounded-full data-[state=on]:bg-purple-500 data-[state=on]:text-white data-[state=off]:text-gray-700"
-                  >
-                    TAL File
-                  </ToggleGroupItem>
-                </ToggleGroup>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-500 text-white text-sm font-semibold">
+                  {campaignMode === "tal" ? 4 : 3}
+                </span>
+                <h3 className="text-sm font-semibold text-gray-900">
+                  Campaign Request
+                </h3>
               </div>
 
               <p className="text-xs text-gray-700 mb-3">
