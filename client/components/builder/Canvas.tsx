@@ -6,8 +6,9 @@ import { useLayout } from "@/hooks/useLayout";
 import { ComponentRenderer } from "./Renderer";
 import { ComponentsPanel } from "./ComponentsPanel";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Eye, Save } from "lucide-react";
+import { ArrowLeft, Copy, Eye, Save } from "lucide-react";
 import { templateLayoutMap } from "@/components/predefine-email-templates/templates";
+import { useToast } from "@/hooks/use-toast";
 
 interface BuilderCanvasProps {
   onBack?: () => void;
@@ -19,6 +20,7 @@ const DEFAULT_LAYOUT: BuilderComponent[] = [];
 
 export const BuilderCanvas: React.FC<BuilderCanvasProps> = ({ onBack, templateId, initialLayout }) => {
   const [isPreviewMode, setIsPreviewMode] = React.useState(false);
+  const { toast } = useToast();
 
   const layoutConfig = initialLayout
     ? initialLayout
@@ -29,6 +31,21 @@ export const BuilderCanvas: React.FC<BuilderCanvasProps> = ({ onBack, templateId
   const { layout, addComponent, moveComponent, updateComponent, removeComponent } = useLayout(
     layoutConfig,
   );
+
+  const handleCopyLayout = async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(layout, null, 2));
+      toast({
+        title: "Copied",
+        description: "Editor layout copied to clipboard.",
+      });
+    } catch (error) {
+      toast({
+        title: "Copy failed",
+        description: "Unable to copy the editor layout.",
+      });
+    }
+  };
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: DRAG_TYPES.COMPONENT,
@@ -56,7 +73,7 @@ export const BuilderCanvas: React.FC<BuilderCanvasProps> = ({ onBack, templateId
   // If in preview mode, show full page preview without editor UI
   if (isPreviewMode) {
     return (
-      <div className="flex flex-col h-[calc(100vh-120px)] bg-white">
+      <div className="flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-white">
         <header className="h-14 border-b bg-white px-6 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center gap-4">
             <span className="text-sm font-bold text-gray-900 tracking-tight">
@@ -75,8 +92,8 @@ export const BuilderCanvas: React.FC<BuilderCanvasProps> = ({ onBack, templateId
             Back to Editor
           </button>
         </header>
-        <div className="flex-1 overflow-y-auto bg-white p-8">
-          <div className="max-w-5xl mx-auto min-h-full rounded-xl border border-gray-200 bg-white p-6 space-y-4">
+        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-white p-8">
+          <div className="w-full max-w-5xl mx-auto min-h-full rounded-xl border border-gray-200 bg-white p-6 space-y-4">
             {layout.map((comp) => (
               <ComponentRenderer
                 key={comp.id}
@@ -94,9 +111,9 @@ export const BuilderCanvas: React.FC<BuilderCanvasProps> = ({ onBack, templateId
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-120px)] bg-gray-50">
+    <div className="flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-gray-50">
       {/* Top Header */}
-      <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between sticky top-0 z-40">
+      <div className="sticky top-0 z-40 flex flex-shrink-0 items-center justify-between border-b border-gray-200 bg-white p-4">
         <div className="flex items-center gap-4 flex-1">
           {onBack && (
             <Button
@@ -128,6 +145,15 @@ export const BuilderCanvas: React.FC<BuilderCanvasProps> = ({ onBack, templateId
           <Button
             variant="outline"
             size="sm"
+            onClick={handleCopyLayout}
+            className="gap-2"
+          >
+            <Copy className="w-4 h-4" />
+            Copy
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setIsPreviewMode(true)}
             className="gap-2"
           >
@@ -144,18 +170,18 @@ export const BuilderCanvas: React.FC<BuilderCanvasProps> = ({ onBack, templateId
       </div>
 
       {/* Main Content - Three Panel Layout */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex min-h-0 flex-1 overflow-hidden overflow-x-hidden">
         {/* Left Sidebar - Components Panel */}
-        <div className="flex flex-col w-72 bg-white border-r border-gray-200 overflow-y-auto">
+        <div className="flex w-72 flex-shrink-0 flex-col overflow-y-auto border-r border-gray-200 bg-white">
           <ComponentsPanel />
         </div>
 
         {/* Center - Editor Canvas */}
-        <div className="flex-1 overflow-y-auto p-8 bg-gray-50">
+        <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 p-8">
           <div
             ref={drop}
             className={cn(
-              "max-w-5xl mx-auto min-h-full transition-all duration-200 ease-in-out p-6 rounded-xl bg-white border border-gray-200",
+              "w-full max-w-5xl mx-auto min-h-full transition-all duration-200 ease-in-out rounded-xl border border-gray-200 bg-white p-6",
               isOver && canDrop && "ring-2 ring-valasys-orange ring-dashed bg-orange-50",
               layout.length === 0 && "border-2 border-dashed border-gray-300 flex items-center justify-center",
             )}
