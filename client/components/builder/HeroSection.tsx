@@ -188,43 +188,50 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       if (!isSelected) return null;
 
       return (
-        <div className="absolute top-1 right-1 flex items-center gap-1 bg-white rounded-md shadow-lg border border-valasys-orange/20 z-20">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 hover:bg-valasys-orange/10"
+        <div
+          className="absolute top-1 right-1 flex items-center gap-1 bg-white rounded-md shadow-lg border border-valasys-orange/20 z-50 pointer-events-auto"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               handleCopyElement(element.id, element.content);
+              console.log("Copy clicked for element:", element.id);
             }}
+            className="h-6 w-6 flex items-center justify-center hover:bg-valasys-orange/10 rounded transition-colors cursor-pointer"
             title={`Copy element (${clipboardData ? "has clipboard data" : "empty"})`}
           >
             <Copy className="h-3.5 w-3.5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 hover:bg-valasys-orange/10"
+          </button>
+          <button
+            type="button"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               handleAddElement(element.id, element.content);
+              console.log("Add/Paste clicked for element:", element.id);
             }}
+            className="h-6 w-6 flex items-center justify-center hover:bg-valasys-orange/10 rounded transition-colors cursor-pointer"
             title={clipboardData ? "Paste content" : "Duplicate element"}
           >
             <Plus className="h-3.5 w-3.5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 hover:bg-red-100 text-red-500"
+          </button>
+          <button
+            type="button"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               handleDeleteElement(element.id);
+              console.log("Delete clicked for element:", element.id);
             }}
+            className="h-6 w-6 flex items-center justify-center hover:bg-red-100 text-red-500 rounded transition-colors cursor-pointer"
             title="Reset element to default"
           >
             <Trash2 className="h-3.5 w-3.5" />
-          </Button>
+          </button>
         </div>
       );
     };
@@ -237,12 +244,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         return (
           <div
             key={element.id}
-            className={containerClasses}
+            className={cn(containerClasses, "relative")}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             onClick={() => handleElementClick(element.id)}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-valasys-orange/10 text-valasys-orange text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-valasys-orange/10 text-valasys-orange text-xs font-bold uppercase tracking-wider pointer-events-none">
               <span
                 contentEditable={isSelected}
                 suppressContentEditableWarning
@@ -250,7 +257,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   const text = e.currentTarget.textContent || "";
                   handleElementUpdate(element.id, text);
                 }}
-                className={isSelected ? "focus:outline-none focus:ring-0" : ""}
+                onClick={(e) => {
+                  if (isSelected) e.stopPropagation();
+                }}
+                className={isSelected ? "focus:outline-none focus:ring-0 pointer-events-auto" : ""}
               >
                 {element.content}
               </span>
@@ -263,7 +273,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         return (
           <div
             key={element.id}
-            className={containerClasses}
+            className={cn(containerClasses, "relative")}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             onClick={() => handleElementClick(element.id)}
@@ -275,9 +285,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 const text = e.currentTarget.textContent || "";
                 handleElementUpdate(element.id, text);
               }}
+              onClick={(e) => {
+                if (isSelected) e.stopPropagation();
+              }}
               className={cn(
                 "text-4xl lg:text-6xl font-black text-gray-900 tracking-tight leading-none max-w-4xl",
-                isSelected ? "focus:outline-none focus:ring-0" : ""
+                isSelected ? "focus:outline-none focus:ring-0 pointer-events-auto" : ""
               )}
             >
               {element.content}
@@ -290,7 +303,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         return (
           <div
             key={element.id}
-            className={containerClasses}
+            className={cn(containerClasses, "relative")}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             onClick={() => handleElementClick(element.id)}
@@ -302,9 +315,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 const text = e.currentTarget.textContent || "";
                 handleElementUpdate(element.id, text);
               }}
+              onClick={(e) => {
+                if (isSelected) e.stopPropagation();
+              }}
               className={cn(
                 "text-lg text-gray-600 max-w-2xl leading-relaxed",
-                isSelected ? "focus:outline-none focus:ring-0" : ""
+                isSelected ? "focus:outline-none focus:ring-0 pointer-events-auto" : ""
               )}
             >
               {element.content}

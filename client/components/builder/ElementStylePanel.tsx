@@ -45,6 +45,9 @@ interface StyleState {
   imageUrl: string;
   altText: string;
   videoUrl: string;
+  heroBadgeText: string;
+  heroHeadingText: string;
+  heroDescriptionText: string;
 }
 
 interface SpacingState {
@@ -102,6 +105,9 @@ export const ElementStylePanel: React.FC<ElementStylePanelProps> = ({
     imageUrl: "",
     altText: "",
     videoUrl: "",
+    heroBadgeText: "",
+    heroHeadingText: "",
+    heroDescriptionText: "",
   });
 
   const [spacing, setSpacing] = React.useState<SpacingState>({
@@ -224,6 +230,9 @@ export const ElementStylePanel: React.FC<ElementStylePanelProps> = ({
         imageUrl: component.imageUrl || props.imageUrl || "",
         altText: component.altText || props.altText || "",
         videoUrl: component.videoUrl || props.videoUrl || "",
+        heroBadgeText: component.heroBadgeText || "",
+        heroHeadingText: component.heroHeadingText || "",
+        heroDescriptionText: component.heroDescriptionText || "",
       });
 
       // Initialize units from component
@@ -620,6 +629,50 @@ export const ElementStylePanel: React.FC<ElementStylePanelProps> = ({
                     </p>
                   </div>
                 )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Hero Content Section */}
+        {component.type === "hero" && (
+          <div>
+            <SectionHeader title="Content" section="content" />
+            {expandedSections.content && (
+              <div className="px-4 py-3 space-y-4 bg-gray-50 border-b border-gray-200">
+                {/* Badge Text */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-2">Badge Text</label>
+                  <Input
+                    type="text"
+                    value={component.heroBadgeText || ""}
+                    onChange={(e) => onUpdate({ heroBadgeText: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter badge text..."
+                  />
+                </div>
+
+                {/* Heading Text */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-2">Heading Text</label>
+                  <textarea
+                    value={component.heroHeadingText || ""}
+                    onChange={(e) => onUpdate({ heroHeadingText: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-20"
+                    placeholder="Enter heading text..."
+                  />
+                </div>
+
+                {/* Description Text */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-2">Description Text</label>
+                  <textarea
+                    value={component.heroDescriptionText || ""}
+                    onChange={(e) => onUpdate({ heroDescriptionText: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-20"
+                    placeholder="Enter description text..."
+                  />
+                </div>
               </div>
             )}
           </div>
