@@ -99,13 +99,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   const handleEditableFocus = (event: React.FocusEvent<HTMLElement>) => {
-    const selection = window.getSelection();
-    const range = document.createRange();
-
-    range.selectNodeContents(event.currentTarget);
-    range.collapse(false);
-    selection?.removeAllRanges();
-    selection?.addRange(range);
     setEditingElementId(event.currentTarget.dataset.elementId || null);
   };
 
@@ -280,6 +273,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   if (isSelected) e.stopPropagation();
                 }}
                 dir="ltr"
+                style={{ unicodeBidi: "plaintext", textAlign: "left" }}
                 className={cn(
                   "whitespace-pre-wrap break-words [overflow-wrap:anywhere]",
                   isSelected ? "focus:outline-none focus:ring-0 pointer-events-auto" : "pointer-events-none"
@@ -315,6 +309,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 if (isSelected) e.stopPropagation();
               }}
               dir="ltr"
+              style={{ unicodeBidi: "plaintext", textAlign: "left" }}
               className={cn(
                 "text-4xl lg:text-6xl font-black text-gray-900 tracking-tight leading-none max-w-4xl whitespace-pre-wrap break-words [overflow-wrap:anywhere]",
                 isSelected ? "focus:outline-none focus:ring-0 pointer-events-auto" : "pointer-events-none"
@@ -349,6 +344,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 if (isSelected) e.stopPropagation();
               }}
               dir="ltr"
+              style={{ unicodeBidi: "plaintext", textAlign: "left" }}
               className={cn(
                 "text-lg text-gray-600 max-w-2xl leading-relaxed whitespace-pre-wrap break-words [overflow-wrap:anywhere]",
                 isSelected ? "focus:outline-none focus:ring-0 pointer-events-auto" : "pointer-events-none"
