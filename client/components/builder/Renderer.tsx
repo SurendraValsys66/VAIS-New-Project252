@@ -520,12 +520,14 @@ export const ComponentRenderer: React.FC<RendererProps> = ({
         </div>,
       );
     }
-    case "image":
+    case "image": {
+      const imageSource = component.imageUrl || component.backgroundImageUrl;
+
       return wrapWithControls(
         <div className="p-4 h-full" style={getComponentStyles()}>
-          {component.imageUrl ? (
+          {imageSource ? (
             <img
-              src={component.imageUrl}
+              src={imageSource}
               alt={component.altText || "Image"}
               className="h-full w-full rounded-2xl object-cover"
               style={{
@@ -543,6 +545,7 @@ export const ComponentRenderer: React.FC<RendererProps> = ({
           )}
         </div>,
       );
+    }
     case "video":
       return wrapWithControls(
         <div className="p-4 h-full" style={getComponentStyles()}>
