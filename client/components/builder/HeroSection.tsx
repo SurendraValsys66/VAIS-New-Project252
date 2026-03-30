@@ -63,10 +63,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const getComponentStyles = () => {
     const styles: React.CSSProperties = {};
-    if (component.width) {
-      const unit = component.widthUnit || "%";
-      styles.width = `${component.width}${unit}`;
-    }
+    // Don't apply width to hero container - it should be full width
+    // Width adjustments should only affect internal elements, not the container
     if (component.height) {
       const unit = component.heightUnit || "px";
       styles.minHeight = `${component.height}${unit}`;
@@ -328,6 +326,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       case "heading":
         const headingContent = isSelected ? getDisplayContent("heading") : (element.content || getDefaultContent("heading"));
+        const headingWidth = component.width ? `${component.width}${component.widthUnit || "%"}` : undefined;
         return (
           <div
             key={element.id}
@@ -348,17 +347,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onFocus={handleEditableFocus}
                 onBlur={() => setEditingElementId(null)}
                 onClick={(e) => e.stopPropagation()}
-                className="min-h-0 resize-none overflow-hidden border-0 bg-transparent p-0 text-4xl lg:text-6xl font-black text-gray-900 tracking-tight leading-none max-w-4xl shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="min-h-0 resize-none overflow-hidden border-0 bg-transparent p-0 text-4xl lg:text-6xl font-black text-gray-900 tracking-tight leading-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                style={{ maxWidth: headingWidth || "100%" }}
                 rows={1}
               />
             ) : (
               <h1
-                className="text-4xl lg:text-6xl font-black text-gray-900 tracking-tight leading-none max-w-4xl break-words"
+                className="text-4xl lg:text-6xl font-black text-gray-900 tracking-tight leading-none break-words"
                 style={{
                   direction: "ltr",
                   wordWrap: "break-word",
                   overflowWrap: "break-word",
                   whiteSpace: "normal",
+                  maxWidth: headingWidth || "100%",
                 }}
               >
                 {headingContent}
@@ -370,6 +371,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       case "paragraph":
         const paragraphContent = isSelected ? getDisplayContent("paragraph") : (element.content || getDefaultContent("paragraph"));
+        const paragraphWidth = component.width ? `${component.width}${component.widthUnit || "%"}` : undefined;
         return (
           <div
             key={element.id}
@@ -390,17 +392,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onFocus={handleEditableFocus}
                 onBlur={() => setEditingElementId(null)}
                 onClick={(e) => e.stopPropagation()}
-                className="min-h-0 resize-none overflow-hidden border-0 bg-transparent p-0 text-lg text-gray-600 max-w-2xl leading-relaxed shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="min-h-0 resize-none overflow-hidden border-0 bg-transparent p-0 text-lg text-gray-600 leading-relaxed shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                style={{ maxWidth: paragraphWidth || "100%" }}
                 rows={1}
               />
             ) : (
               <p
-                className="text-lg text-gray-600 max-w-2xl leading-relaxed break-words"
+                className="text-lg text-gray-600 leading-relaxed break-words"
                 style={{
                   direction: "ltr",
                   wordWrap: "break-word",
                   overflowWrap: "break-word",
                   whiteSpace: "normal",
+                  maxWidth: paragraphWidth || "100%",
                 }}
               >
                 {paragraphContent}
@@ -411,6 +415,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         );
 
       case "buttons":
+        const buttonsWidth = component.width ? `${component.width}${component.widthUnit || "%"}` : undefined;
         return (
           <div
             key={element.id}
@@ -419,7 +424,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             onMouseLeave={onMouseLeave}
             onClick={() => handleElementClick(element.id)}
           >
-            <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
+            <div className="flex flex-wrap items-center justify-center gap-4 mt-4" style={{ maxWidth: buttonsWidth || "100%" }}>
               {isSelected ? (
                 <Input
                   value={component.heroPrimaryButtonText}
