@@ -32,56 +32,75 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({
   block,
   onUpdate,
   onSelect,
+  selectedFeatureId: controlledSelectedFeatureId = null,
   selectedHeaderElement,
   imageUrl,
 }) => {
-  const [selectedFeatureId, setSelectedFeatureId] = React.useState<string | null>(null);
+  const [selectedFeatureId, setSelectedFeatureId] = React.useState<string | null>(controlledSelectedFeatureId);
   const [hoveredCardId, setHoveredCardId] = React.useState<string | null>(null);
   const [hoveredElement, setHoveredElement] = React.useState<{
     featureId: string;
     element: "icon" | "title" | "description";
   } | null>(null);
   const [editingFeatureId, setEditingFeatureId] = React.useState<string | null>(null);
-  const [hoveredHeaderElement, setHoveredHeaderElement] = React.useState<"heading" | "description" | null>(null);
-  const [localSelectedHeaderElement, setLocalSelectedHeaderElement] = React.useState<"heading" | "description" | null>(
-    selectedHeaderElement as "heading" | "description" | null
-  );
+  const [hoveredHeaderElement, setHoveredHeaderElement] = React.useState<string | null>(null);
+  const [localSelectedHeaderElement, setLocalSelectedHeaderElement] = React.useState<string | null>(selectedHeaderElement ?? null);
   const [isClickingControl, setIsClickingControl] = React.useState(false);
 
   const features: Feature[] = (block.properties.features || []) as Feature[];
 
-  // Initialize header elements from block properties (backward compatible)
-  const initializeHeaderElements = (): HeaderElement[] => {
+  const initializeHeaderElements = React.useCallback((): HeaderElement[] => {
     if (block.properties.headerElements && Array.isArray(block.properties.headerElements) && block.properties.headerElements.length > 0) {
       return block.properties.headerElements as HeaderElement[];
     }
-    // Backward compatibility: convert old heading/description to new format
+
     const elements: HeaderElement[] = [];
+
     if (block.properties.heading) {
       elements.push({
-        id: `heading-${Date.now()}`,
+        id: "heading",
         type: "heading",
         text: block.properties.heading,
       });
     }
+
     if (block.properties.description) {
       elements.push({
-        id: `description-${Date.now()}`,
+        id: "description",
         type: "description",
         text: block.properties.description,
       });
     }
+
     return elements;
-  };
+  }, [block.properties.description, block.properties.headerElements, block.properties.heading]);
 
-  const [headerElements, setHeaderElements] = React.useState<HeaderElement[]>(
-    initializeHeaderElements()
-  );
+  const initializedHeaderElements = React.useMemo(() => initializeHeaderElements(), [initializeHeaderElements]);
+  const [headerElements, setHeaderElements] = React.useState<HeaderElement[]>(initializedHeaderElements);
 
-  // Sync headerElements with block.properties whenever block changes
   React.useEffect(() => {
-    setHeaderElements(initializeHeaderElements());
-  }, [block.properties.headerElements]);
+    setSelectedFeatureId(controlledSelectedFeatureId);
+  }, [controlledSelectedFeatureId]);
+
+  React.useEffect(() => {
+    setLocalSelectedHeaderElement(selectedHeaderElement ?? null);
+  }, [selectedHeaderElement]);
+
+  React.useEffect(() => {
+    setHeaderElements(initializedHeaderElements);
+  }, [initializedHeaderElements]);
+
+  React.useEffect(() => {
+    if ((!block.properties.headerElements || block.properties.headerElements.length === 0) && initializedHeaderElements.length > 0) {
+      onUpdate({
+        ...block,
+        properties: {
+          ...block.properties,
+          headerElements: initializedHeaderElements,
+        },
+      });
+    }
+  }, [block.id, block.properties.description, block.properties.headerElements, block.properties.heading, initializedHeaderElements, onUpdate]);
 
   const handleCopyFeature = (featureId: string) => {
     const featureToCopy = features.find(f => f.id === featureId);
@@ -108,7 +127,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({
     });
 
     setSelectedFeatureId(newFeatureId);
-    onSelect?.(newFeatureId);
+    onSelect?.({ type: "feature", id: newFeatureId });
   };
 
   const handleDeleteFeature = (featureId: string) => {
@@ -121,6 +140,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({
       },
     });
     setSelectedFeatureId(null);
+    onSelect?.(null);
   };
 
   const handleAddFeature = (featureId: string) => {
@@ -345,44 +365,70 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({
           {headerElements.map((element) => {
             const isHeading = element.type === "heading";
             const TagName = isHeading ? "h2" : "p";
+            const isEditingHeaderElement = localSelectedHeaderElement === element.id;
+            const fallbackText = isHeading ? "Why Choose Us" : "Discover the key features that make our product special";
 
             return (
               <div key={element.id} className="relative">
-                <TagName
-                  className={cn(
-                    isHeading
-                      ? "text-3xl font-bold text-gray-900 cursor-text p-2 rounded transition-all outline-none"
-                      : "text-gray-600 cursor-text p-2 rounded transition-all outline-none",
-                    localSelectedHeaderElement === element.id
-                      ? "border-2 border-solid border-valasys-orange"
-                      : hoveredHeaderElement === element.id
-                      ? "border-2 border-dashed border-valasys-orange bg-gray-50"
-                      : "border-2 border-transparent hover:bg-gray-50"
-                  )}
-                  contentEditable
-                  suppressContentEditableWarning
-                  onBlur={(e) => {
-                    handleUpdateHeaderElement(element.id, e.currentTarget.textContent || "");
-                    if (!isClickingControl) {
-                      setLocalSelectedHeaderElement(null);
-                      onSelect?.(null);
-                    }
-                  }}
-                  onFocus={(e) => {
-                    setLocalSelectedHeaderElement(element.id);
-                    onSelect?.({ type: element.type, id: element.id });
-                  }}
-                  onMouseEnter={() => setHoveredHeaderElement(element.id)}
-                  onMouseLeave={() => setHoveredHeaderElement(null)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (localSelectedHeaderElement === element.id) return;
-                    setLocalSelectedHeaderElement(element.id);
-                    onSelect?.({ type: element.type, id: element.id });
-                  }}
-                >
-                  {element.text || (isHeading ? "Why Choose Us" : "Discover the key features that make our product special")}
-                </TagName>
+                {isEditingHeaderElement ? (
+                  isHeading ? (
+                    <Input
+                      value={element.text}
+                      onChange={(e) => handleUpdateHeaderElement(element.id, e.target.value)}
+                      onBlur={() => {
+                        if (!isClickingControl) {
+                          setLocalSelectedHeaderElement(null);
+                          onSelect?.(null);
+                        }
+                      }}
+                      onFocus={() => onSelect?.({ type: element.type, id: element.id })}
+                      onClick={(e) => e.stopPropagation()}
+                      className={cn(
+                        "h-auto w-full border-2 border-solid border-valasys-orange bg-transparent px-2 py-1 text-center text-3xl font-bold text-gray-900 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                        isHeading && "tracking-tight"
+                      )}
+                      style={{ direction: "ltr" }}
+                      autoFocus
+                    />
+                  ) : (
+                    <Textarea
+                      value={element.text}
+                      onChange={(e) => handleUpdateHeaderElement(element.id, e.target.value)}
+                      onBlur={() => {
+                        if (!isClickingControl) {
+                          setLocalSelectedHeaderElement(null);
+                          onSelect?.(null);
+                        }
+                      }}
+                      onFocus={() => onSelect?.({ type: element.type, id: element.id })}
+                      onClick={(e) => e.stopPropagation()}
+                      className="min-h-0 w-full resize-none border-2 border-solid border-valasys-orange bg-transparent px-2 py-1 text-center text-gray-600 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                      rows={3}
+                      style={{ direction: "ltr" }}
+                      autoFocus
+                    />
+                  )
+                ) : (
+                  <TagName
+                    className={cn(
+                      isHeading
+                        ? "text-3xl font-bold text-gray-900 cursor-text p-2 rounded transition-all outline-none"
+                        : "text-gray-600 cursor-text p-2 rounded transition-all outline-none",
+                      hoveredHeaderElement === element.id
+                        ? "border-2 border-dashed border-valasys-orange bg-gray-50"
+                        : "border-2 border-transparent hover:bg-gray-50"
+                    )}
+                    onMouseEnter={() => setHoveredHeaderElement(element.id)}
+                    onMouseLeave={() => setHoveredHeaderElement(null)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setLocalSelectedHeaderElement(element.id);
+                      onSelect?.({ type: element.type, id: element.id });
+                    }}
+                  >
+                    {element.text || fallbackText}
+                  </TagName>
+                )}
                 {renderHeaderControls(element.id)}
               </div>
             );
