@@ -386,10 +386,35 @@ export const PricingBlockPreview: React.FC<BlockPreviewProps> = ({
   const blockStyles = getBlockStyles(props);
   const [hoveredTierId, setHoveredTierId] = React.useState<string | null>(null);
   const [selectedTierId, setSelectedTierId] = React.useState<string | null>(null);
+  const [hoveredElement, setHoveredElement] = React.useState<string | null>(null);
+  const [selectedElement, setSelectedElement] = React.useState<string | null>(null);
 
   const handleTierClick = (e: React.MouseEvent, tierId: string) => {
     e.stopPropagation();
     setSelectedTierId(selectedTierId === tierId ? null : tierId);
+  };
+
+  const handleElementClick = (e: React.MouseEvent, elementId: string) => {
+    e.stopPropagation();
+    setSelectedElement(selectedElement === elementId ? null : elementId);
+  };
+
+  const handleCopyElement = (e: React.MouseEvent, text: string) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(text);
+    alert("Text copied to clipboard!");
+  };
+
+  const handleDeleteElement = (e: React.MouseEvent, elementId: string) => {
+    e.stopPropagation();
+    if (confirm("Are you sure you want to delete this element?")) {
+      if (elementId === "heading") {
+        onUpdate({ heading: "" });
+      } else if (elementId === "subheading") {
+        onUpdate({ subheading: "" });
+      }
+      setSelectedElement(null);
+    }
   };
 
   const handleCopyTier = (e: React.MouseEvent, tier: any) => {
@@ -417,10 +442,89 @@ export const PricingBlockPreview: React.FC<BlockPreviewProps> = ({
       style={blockStyles}
     >
       <div className="px-8 py-8">
-        <h2 className="text-3xl font-bold text-center mb-2" style={{ color: props.textColor || "#1f2937" }}>
-          {props.heading}
-        </h2>
-        <p className="text-center mb-8" style={{ color: props.textColor || "#4b5563" }}>{props.subheading}</p>
+        <div
+          className="cursor-pointer transition-all rounded p-3 mb-2 relative"
+          style={{
+            border: selectedElement === "heading"
+              ? "3px solid #FF6A00"
+              : hoveredElement === "heading"
+              ? "3px dashed #FF6A00"
+              : "1px solid transparent",
+          }}
+          onMouseEnter={(e) => {
+            e.stopPropagation();
+            setHoveredElement("heading");
+          }}
+          onMouseLeave={(e) => {
+            e.stopPropagation();
+            setHoveredElement(null);
+          }}
+          onClick={(e) => handleElementClick(e, "heading")}
+        >
+          <h2 className="text-3xl font-bold text-center" style={{ color: props.textColor || "#1f2937" }}>
+            {props.heading}
+          </h2>
+          {selectedElement === "heading" && (
+            <div className="mt-3 flex gap-2 pt-3 border-t border-gray-300">
+              <button
+                onClick={(e) => handleCopyElement(e, props.heading)}
+                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-medium text-sm transition-colors flex items-center justify-center gap-1"
+                title="Copy text"
+              >
+                <span>📋</span> Copy
+              </button>
+              <button
+                onClick={(e) => handleDeleteElement(e, "heading")}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded font-medium text-sm transition-colors flex items-center justify-center gap-1"
+                title="Delete this element"
+              >
+                <span>🗑️</span> Delete
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div
+          className="cursor-pointer transition-all rounded p-3 mb-8 relative"
+          style={{
+            border: selectedElement === "subheading"
+              ? "3px solid #FF6A00"
+              : hoveredElement === "subheading"
+              ? "3px dashed #FF6A00"
+              : "1px solid transparent",
+          }}
+          onMouseEnter={(e) => {
+            e.stopPropagation();
+            setHoveredElement("subheading");
+          }}
+          onMouseLeave={(e) => {
+            e.stopPropagation();
+            setHoveredElement(null);
+          }}
+          onClick={(e) => handleElementClick(e, "subheading")}
+        >
+          <p className="text-center" style={{ color: props.textColor || "#4b5563" }}>
+            {props.subheading}
+          </p>
+          {selectedElement === "subheading" && (
+            <div className="mt-3 flex gap-2 pt-3 border-t border-gray-300">
+              <button
+                onClick={(e) => handleCopyElement(e, props.subheading)}
+                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-medium text-sm transition-colors flex items-center justify-center gap-1"
+                title="Copy text"
+              >
+                <span>📋</span> Copy
+              </button>
+              <button
+                onClick={(e) => handleDeleteElement(e, "subheading")}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded font-medium text-sm transition-colors flex items-center justify-center gap-1"
+                title="Delete this element"
+              >
+                <span>🗑️</span> Delete
+              </button>
+            </div>
+          )}
+        </div>
         <div className="grid grid-cols-3 gap-8">
           {props.pricingTiers?.map((tier: any) => (
             <div
