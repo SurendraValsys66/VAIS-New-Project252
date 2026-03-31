@@ -359,7 +359,7 @@ export const StylePanel: React.FC<StylePanelProps> = ({ onClose }) => {
                     />
                     <Select value={paddingUnit} onValueChange={(val) => setPaddingUnit(val as "px" | "%")}>
                       <SelectTrigger className="w-20 h-7 text-xs">
-                        <SelectValue />
+                        <SelectValue placeholder={paddingUnit} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="px">px</SelectItem>
@@ -415,9 +415,9 @@ export const StylePanel: React.FC<StylePanelProps> = ({ onClose }) => {
                           className="w-16 text-xs h-7"
                         />
                         <Select value={paddingUnit} onValueChange={(val) => setPaddingUnit(val as "px" | "%")}>
-                          <SelectTrigger className="w-20 h-7 text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
+                      <SelectTrigger className="w-20 h-7 text-xs">
+                        <SelectValue placeholder={paddingUnit} />
+                      </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="px">px</SelectItem>
                             <SelectItem value="%">%</SelectItem>
@@ -482,7 +482,7 @@ export const StylePanel: React.FC<StylePanelProps> = ({ onClose }) => {
                     />
                     <Select value={marginUnit} onValueChange={(val) => setMarginUnit(val as "px" | "%")}>
                       <SelectTrigger className="w-20 h-7 text-xs">
-                        <SelectValue />
+                        <SelectValue placeholder={marginUnit} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="px">px</SelectItem>
@@ -538,9 +538,9 @@ export const StylePanel: React.FC<StylePanelProps> = ({ onClose }) => {
                           className="w-16 text-xs h-7"
                         />
                         <Select value={marginUnit} onValueChange={(val) => setMarginUnit(val as "px" | "%")}>
-                          <SelectTrigger className="w-20 h-7 text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
+                      <SelectTrigger className="w-20 h-7 text-xs">
+                        <SelectValue placeholder={marginUnit} />
+                      </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="px">px</SelectItem>
                             <SelectItem value="%">%</SelectItem>
