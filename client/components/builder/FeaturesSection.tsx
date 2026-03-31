@@ -48,6 +48,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({
   );
   const [isClickingControl, setIsClickingControl] = React.useState(false);
   const [editingHeaderElementId, setEditingHeaderElementId] = React.useState<string | null>(null);
+  const headerElementRefsMap = React.useRef<Record<string, HTMLElement | null>>({});
 
   const features: Feature[] = (block.properties.features || []) as Feature[];
 
@@ -350,6 +351,18 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({
             return (
               <div key={element.id} className="relative">
                 <TagName
+                  ref={(el) => {
+                    if (el) {
+                      headerElementRefsMap.current[element.id] = el;
+                      // Only update DOM content if not currently editing this element
+                      if (editingHeaderElementId !== element.id) {
+                        const displayText = element.text || (isHeading ? "Why Choose Us" : "Discover the key features that make our product special");
+                        if (el.textContent !== displayText) {
+                          el.textContent = displayText;
+                        }
+                      }
+                    }
+                  }}
                   dir="ltr"
                   className={cn(
                     isHeading
@@ -391,9 +404,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({
                     setEditingHeaderElementId(element.id);
                     onSelect?.({ type: element.type, id: element.id });
                   }}
-                >
-                  {element.text || (isHeading ? "Why Choose Us" : "Discover the key features that make our product special")}
-                </TagName>
+                />
                 {renderHeaderControls(element.id)}
               </div>
             );
