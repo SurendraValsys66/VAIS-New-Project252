@@ -51,6 +51,7 @@ import ContactSales from "./pages/ContactSales";
 import Maintenance from "./pages/Maintenance";
 import Templates from "./pages/Templates";
 import LandingPages from "./pages/LandingPages";
+import AIBuilderPage from "./pages/AIBuilderPage";
 import CompanyDetail from "./pages/CompanyDetail";
 
 const queryClient = new QueryClient();
@@ -117,6 +118,7 @@ const App = () => (
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/templates" element={<Templates />} />
                 <Route path="/landing-pages" element={<LandingPages />} />
+                <Route path="/ai-builder" element={<AIBuilderPage />} />
                 <Route path="/mastery" element={<MasteryGuide />} />
 
                 {/* Onboarding flow */}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { BuilderCanvas } from "@/components/builder/Canvas";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ interface PageData {
 }
 
 export default function LandingPages() {
+  const navigate = useNavigate();
   const [view, setView] = useState<View>("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [pages, setPages] = useState<PageData[]>([
@@ -57,7 +59,7 @@ export default function LandingPages() {
   };
 
   const handleAIBuilder = () => {
-    console.log("AI builder clicked");
+    navigate("/ai-builder");
   };
 
   const handleBack = () => {
