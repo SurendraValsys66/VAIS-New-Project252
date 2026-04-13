@@ -661,62 +661,50 @@ function DeliverablesDialog({
         </div>
 
         <div className="px-6 py-6 space-y-8">
-          {/* Campaign Intelligence Section - Combined KPI + Recommendation */}
-          <div className="bg-gradient-to-br from-white via-white to-orange-50/20 rounded-2xl border border-orange-200 shadow-lg overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-orange-600 to-orange-500 px-8 py-6">
-              <h2 className="text-2xl font-bold text-white tracking-tight mb-1">Campaign Intelligence</h2>
-              <p className="text-orange-100 text-sm font-medium">AI-Powered Analysis & Recommendations</p>
+          {/* Campaign Intelligence Section - Sleek & Compact */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            {/* Compact Header with Gradient Accent */}
+            <div className="flex items-center gap-4 px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-orange-50/30">
+              <div className="p-2 bg-orange-600 rounded-lg">
+                <Activity className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-900">Campaign Intelligence</h3>
+                <p className="text-xs text-gray-500 font-medium">Metrics & AI-Powered Recommendation</p>
+              </div>
             </div>
 
-            <div className="p-8 space-y-8">
-              {/* KPI Metrics Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Content */}
+            <div className="p-6 space-y-6">
+              {/* Compact KPI Metrics */}
+              <div className="grid grid-cols-3 gap-3">
                 {/* Monthly Volume */}
-                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all hover:border-orange-200">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="p-3 bg-orange-50 rounded-lg text-orange-600">
-                      <Mail className="w-5 h-5" />
-                    </div>
-                    <span className="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded">Monthly</span>
-                  </div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Delivery Volume</p>
-                  <p className="text-3xl font-black text-gray-900">{totalMonthlyCS.toLocaleString()}</p>
-                  <p className="text-xs text-gray-500 mt-2">per month capacity</p>
+                <div className="text-center p-4 rounded-lg bg-orange-50/50 border border-orange-100 hover:border-orange-200 transition-colors">
+                  <Mail className="w-4 h-4 text-orange-600 mx-auto mb-2" />
+                  <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wider mb-1">Monthly</p>
+                  <p className="text-2xl font-black text-gray-900">{(totalMonthlyCS / 1000).toFixed(1)}k</p>
+                  <p className="text-[10px] text-gray-500 mt-1">deliverables</p>
                 </div>
 
                 {/* Quarterly Volume */}
-                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all hover:border-blue-200">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
-                      <Briefcase className="w-5 h-5" />
-                    </div>
-                    <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Quarterly</span>
-                  </div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Projection</p>
-                  <p className="text-3xl font-black text-gray-900">{(totalMonthlyCS * 3).toLocaleString()}</p>
-                  <p className="text-xs text-gray-500 mt-2">3-month outlook</p>
+                <div className="text-center p-4 rounded-lg bg-blue-50/50 border border-blue-100 hover:border-blue-200 transition-colors">
+                  <Briefcase className="w-4 h-4 text-blue-600 mx-auto mb-2" />
+                  <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wider mb-1">Quarterly</p>
+                  <p className="text-2xl font-black text-gray-900">{((totalMonthlyCS * 3) / 1000).toFixed(1)}k</p>
+                  <p className="text-[10px] text-gray-500 mt-1">forecast</p>
                 </div>
 
                 {/* Database Reach */}
-                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all hover:border-emerald-200">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="p-3 bg-emerald-50 rounded-lg text-emerald-600">
-                      <Users className="w-5 h-5" />
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Database</span>
-                  </div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Reachable Profiles</p>
-                  <p className="text-3xl font-black text-gray-900">{jobLevelTotal.toLocaleString()}</p>
-                  <p className="text-xs text-gray-500 mt-2">across all regions</p>
+                <div className="text-center p-4 rounded-lg bg-emerald-50/50 border border-emerald-100 hover:border-emerald-200 transition-colors">
+                  <Users className="w-4 h-4 text-emerald-600 mx-auto mb-2" />
+                  <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wider mb-1">Database</p>
+                  <p className="text-2xl font-black text-gray-900">{(jobLevelTotal / 1000).toFixed(1)}k</p>
+                  <p className="text-[10px] text-gray-500 mt-1">profiles</p>
                 </div>
               </div>
 
-              {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-
-              {/* Recommended Campaign Type - Enhanced */}
-              <div className="pt-4">
+              {/* Recommendation */}
+              <div className="pt-2 border-t border-gray-100">
                 <RecommendedCampaignType
                   jobTitles={jobTitles}
                   jobFunctions={jobFunctions}
